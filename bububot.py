@@ -20,14 +20,32 @@ async def on_ready():
     )
 
 @client.event
+async def on_member_join(member):
+    await member.create_dm()
+    await member.dm_channel.send(
+        f'Halo {member.name}, welcome to my server :D'
+    )
+
+@client.event
 async def on_message(message):
     # don't reply to the bot itself
     if message.author == client.user:
         return
-
     
     if message.content == 'bubu!info':
         response = INFO_MSG
         await message.channel.send(response)
+    
+    if message.content == 'bubu!annoy':
+        response = "Let me annoy you real quick..."
+        await message.channel.send(response)
+        
+        member = message.author
+        await member.create_dm()
+        await member.dm_channel.send(
+        f'Halo {member.name}, you ugly bonobo!!!'
+    )
+
+
 
 client.run(TOKEN)
