@@ -1,6 +1,7 @@
 import os
 
 import discord
+import random
 from discord import channel
 from dotenv import load_dotenv
 
@@ -8,6 +9,11 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_BUBUBOT_TOKEN')
 SERVER = os.getenv('SERVER_NAME')
 INFO_MSG = os.getenv('INFO_MESSAGE')
+ANNOY_MSGS = [
+        'you ugly bonobo!',
+        'you eternal virgin!',
+        "are you Fireball's GF?"
+    ]
 
 client = discord.Client()
 
@@ -17,13 +23,6 @@ async def on_ready():
     print(
         f'{client.user} is connected to the following guild:\n'
         f'{guild.name}(id: {guild.id})'
-    )
-
-@client.event
-async def on_member_join(member):
-    await member.create_dm()
-    await member.dm_channel.send(
-        f'Halo {member.name}, welcome to my server :D'
     )
 
 @client.event
@@ -43,7 +42,7 @@ async def on_message(message):
         member = message.author
         await member.create_dm()
         await member.dm_channel.send(
-        f'Halo {member.name}, you ugly bonobo!!!'
+        f'Hey {member.name}, {random.choice(ANNOY_MSGS)}'
     )
 
 
