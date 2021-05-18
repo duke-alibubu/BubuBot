@@ -13,7 +13,8 @@ INFO_MSG = os.getenv('INFO_MESSAGE')
 ANNOY_MSGS = [
         'you ugly bonobo!',
         'you eternal virgin!',
-        "are you Fireball's GF?"
+        'are you a sonnovabitch?',
+        "big ass mama's boy"
     ]
 
 OPINION_MSGS = [
