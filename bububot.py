@@ -39,8 +39,9 @@ def calculate_best_opinion(obj):
             msg1 = msg1[:len(msg2)]
         elif (len(msg1) < len(msg2)):
             msg2 = msg2[:len(msg1)]
-        scores.append(lavenshtein_dist(msg1, msg2) + random.randint(1, 10))
+        scores.append(lavenshtein_dist(msg1, msg2)/ random.randint(1, 10))
 
+    random.shuffle(scores)
     min_idx = 0
     min = scores[0]
     for index in range(len(scores)):
