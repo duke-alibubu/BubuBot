@@ -5,6 +5,7 @@ import random
 import numpy as np
 from discord import channel
 from dotenv import load_dotenv
+from discord.ext import commands
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_BUBUBOT_TOKEN')
@@ -67,41 +68,42 @@ def lavenshtein_dist(s1, s2):
         distances = distances_
     return distances[-1]
 
-client = discord.Client()
+bot = commands.Bot(command_prefix='bb!')
 
-@client.event
-async def on_ready():
-    guild = discord.utils.get(client.guilds, name=SERVER)
-    print(
-        f'{client.user} is connected to the following guild:\n'
-        f'{guild.name}(id: {guild.id})'
-    )
+# @client.event
+# async def on_ready():
+#     guild = discord.utils.get(client.guilds, name=SERVER)
+#     print(
+#         f'{client.user} is connected to the following guild:\n'
+#         f'{guild.name}(id: {guild.id})'
+#     )
 
-@client.event
-async def on_message(message):
-    # don't reply to the bot itself
-    if message.author == client.user:
-        return
+@bot.command(name='info')
+async def info(ctx):
+    response = INFO_MSG
+    await ctx.send(response)
+
+@bot.command(name='annoy')
+async def annoy(ctx):
+    message = ctx.message
+    response = "Let me annoy you real quick..."
+    await message.channel.send(response)
     
-    if message.content == 'bubu!info':
-        response = INFO_MSG
-        await message.channel.send(response)
-    elif message.content == 'bubu!annoy':
-        response = "Let me annoy you real quick..."
-        await message.channel.send(response)
-        
-        member = message.author
-        await member.create_dm()
-        await member.dm_channel.send(
-        f'Hey {member.name}, {random.choice(ANNOY_MSGS)}'
-    )
-    elif len(message.content) >= 12 and message.content[:12] == 'bubu!opinion':
-        interest = message.content[13:]
+    member = message.author
+    await member.create_dm()
+    await member.dm_channel.send(
+    f'Hey {member.name}, {random.choice(ANNOY_MSGS)}')
 
-        if len(interest) == 0:
-            response = "Tell me something to give an opinion about?"
-        else:
-            response = calculate_best_opinion(interest)
-        await message.channel.send(response)
+@bot.command(name='opinion')
+async def opinion(ctx):
+    message = ctx.message
+    interest = message.content[11:]
+    print(interest)
 
-client.run(TOKEN)
+    if len(interest) == 0:
+        response = "Tell me something to give an opinion about?"
+    else:
+        response = calculate_best_opinion(interest)
+    await ctx.send(response)
+
+bot.run(TOKEN)
