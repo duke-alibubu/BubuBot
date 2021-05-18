@@ -87,7 +87,7 @@ async def info(ctx):
 async def annoy(ctx):
     message = ctx.message
     response = "Let me annoy you real quick..."
-    await message.channel.send(response)
+    await ctx.send(response)
     
     member = message.author
     await member.create_dm()
@@ -98,7 +98,6 @@ async def annoy(ctx):
 async def opinion(ctx):
     message = ctx.message
     interest = message.content[11:]
-    print(interest)
 
     if len(interest) == 0:
         response = "Tell me something to give an opinion about?"
@@ -106,4 +105,13 @@ async def opinion(ctx):
         response = calculate_best_opinion(interest)
     await ctx.send(response)
 
+@bot.command(name='handsome', help="Are you handsome?")
+@commands.has_role('Nub Dev')
+async def handsome(ctx):
+    await ctx.send("Yes, Developers are handsome.")
+
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.errors.CheckFailure):
+        await ctx.send('No no no, testers are lovely, not handsome.')
 bot.run(TOKEN)
