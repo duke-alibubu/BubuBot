@@ -78,12 +78,12 @@ bot = commands.Bot(command_prefix='bb!')
 #         f'{guild.name}(id: {guild.id})'
 #     )
 
-@bot.command(name='info')
+@bot.command(name='info', help='My info')
 async def info(ctx):
     response = INFO_MSG
     await ctx.send(response)
 
-@bot.command(name='annoy')
+@bot.command(name='annoy', help='Me give u free insults!')
 async def annoy(ctx):
     message = ctx.message
     response = "Let me annoy you real quick..."
@@ -94,7 +94,7 @@ async def annoy(ctx):
     await member.dm_channel.send(
     f'Hey {member.name}, {random.choice(ANNOY_MSGS)}')
 
-@bot.command(name='opinion')
+@bot.command(name='opinion', help="The bot's opinion about something")
 async def opinion(ctx):
     message = ctx.message
     interest = message.content[11:]
