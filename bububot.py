@@ -7,6 +7,7 @@ import numpy as np
 from discord import channel
 from dotenv import load_dotenv
 from discord.ext import commands
+from datetime import datetime, timedelta
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_BUBUBOT_TOKEN')
@@ -114,17 +115,32 @@ async def handsome(ctx):
     await ctx.send("Yes, Developers are handsome.")
 
 @bot.command(name='greet', help="Friendly greet a person :D")
-async def greet(ctx, user: discord.User=NULL):
-    if user == NULL:
+async def greet(ctx, user: discord.User=None):
+    if user is None:
+        # if the user is not specified, latest-joined user will be tagged
         sorted_member_list = sorted(ctx.guild.members, key=lambda x: x.joined_at)
         user = sorted_member_list[-1]
-    embed = discord.Embed(
-        title = "One of Us! One of Us!",
-        color=discord.Colour.purple()
-    )
-    embed.add_field(name="A NEW PAL!", value= f'We got a new member! <@{user.id}> is here to rockkkk!')
-    embed.set_image(url="https://c.tenor.com/ZhAmHufSyFsAAAAM/grand-blue.gif")
-    await ctx.send(embed=embed)
+    else:
+        user = [x for x in ctx.guild.members if x.id == user.id][0]
+    # check if the user has join more than 1 day
+
+    now = datetime.now()
+    difference = now - user.joined_at
+    if (difference <= timedelta(days=1)):
+        response = (
+            "**One of Us! One of Us!**\n" +
+            "**A NEW PAL!**\n" + 
+            f'We got a new member! <@{user.id}> is here to rockkkk!\n'+
+            "https://gfycat.com/welldocumentedevilamethystsunbird-bogdee"
+        )
+    else:
+        response = (
+            "**A fellow PAB veteran!**\n" +
+            "**A VETERAN!**\n" + 
+            f'<@{user.id}>, I hope you have a nice day with lots of alcohol!\n'+
+            "https://tenor.com/view/grand-blue-cheers-beer-party-anime-gif-16490634"
+        )
+    await ctx.send(response)
 
 @bot.event
 async def on_command_error(ctx, error):
