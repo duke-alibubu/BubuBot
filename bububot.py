@@ -110,6 +110,17 @@ async def opinion(ctx):
 async def handsome(ctx):
     await ctx.send("Yes, Developers are handsome.")
 
+@bot.command(name='greet', help="Friendly greet a person :D")
+async def greet(ctx, user: discord.User):
+
+    embed = discord.Embed(
+        title = "One of Us! One of Us!",
+        color=discord.Colour.purple()
+    )
+    embed.add_field(name="A NEW PAL!", value= f'One of us, One of us! <@{user.id}> is here!')
+    embed.set_image(url="https://c.tenor.com/ZhAmHufSyFsAAAAM/grand-blue.gif")
+    await ctx.send(embed=embed)
+
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.errors.CheckFailure):
