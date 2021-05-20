@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 import os
 
 import discord
@@ -25,6 +26,9 @@ OPINION_MSGS = [
     "That is just broken, right?",
     'Ehh, just OK'
 ]
+intents = discord.Intents.default()
+intents.members = True
+bot = commands.Bot(command_prefix='bb!', intents=intents)
 
 def calculate_best_opinion(obj):
     scores = []
@@ -68,7 +72,6 @@ def lavenshtein_dist(s1, s2):
         distances = distances_
     return distances[-1]
 
-bot = commands.Bot(command_prefix='bb!')
 
 # @client.event
 # async def on_ready():
@@ -111,13 +114,15 @@ async def handsome(ctx):
     await ctx.send("Yes, Developers are handsome.")
 
 @bot.command(name='greet', help="Friendly greet a person :D")
-async def greet(ctx, user: discord.User):
-
+async def greet(ctx, user: discord.User=NULL):
+    if user == NULL:
+        sorted_member_list = sorted(ctx.guild.members, key=lambda x: x.joined_at)
+        user = sorted_member_list[-1]
     embed = discord.Embed(
         title = "One of Us! One of Us!",
         color=discord.Colour.purple()
     )
-    embed.add_field(name="A NEW PAL!", value= f'One of us, One of us! <@{user.id}> is here!')
+    embed.add_field(name="A NEW PAL!", value= f'We got a new member! <@{user.id}> is here to rockkkk!')
     embed.set_image(url="https://c.tenor.com/ZhAmHufSyFsAAAAM/grand-blue.gif")
     await ctx.send(embed=embed)
 
