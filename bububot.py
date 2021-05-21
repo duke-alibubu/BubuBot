@@ -147,7 +147,6 @@ async def greet(ctx, user: discord.User=None):
 async def handsome(ctx):
     message = ctx.message
     role = message.content[12:].lstrip()
-    print(role)
 
     if role is None:
         await ctx.send("Sorry pal, please specify the role name for me to ping!")
@@ -159,7 +158,10 @@ async def handsome(ctx):
         return
 
     sender = ctx.author
-    await ctx.send(f'Hello {searched_role.mention}, <@{sender.id}> wants to ping you to do something hideous!')
+    if searched_role in sender.roles:
+        await ctx.send(f'Hello {searched_role.mention}, <@{sender.id}> wants to ping you to do something hideous!')
+    else:
+        await ctx.send(f'Sorry pal, you do not have the role {role} :(')
 
 @bot.event
 async def on_command_error(ctx, error):
