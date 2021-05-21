@@ -144,7 +144,7 @@ async def greet(ctx, user: discord.User=None):
     await ctx.send(response)
 
 @bot.command(name='roleping', help="A person with a given role pings all the people with that role")
-async def handsome(ctx):
+async def roleping(ctx):
     message = ctx.message
     role = message.content[12:].lstrip()
 
@@ -162,6 +162,11 @@ async def handsome(ctx):
         await ctx.send(f'Hello {searched_role.mention}, <@{sender.id}> wants to ping you to do something hideous!')
     else:
         await ctx.send(f'Sorry pal, you do not have the role {role} :(')
+
+@bot.command(name='ass', help="Display an ass.")
+async def ass(ctx):
+    await ctx.send("Yes, I see that you are a man of culture as well.\n" + 
+        "https://pbs.twimg.com/media/EwQVyWOXIAA4vj2?format=jpg&name=360x360")
 
 @bot.event
 async def on_command_error(ctx, error):
