@@ -8,6 +8,7 @@ from discord import channel
 from dotenv import load_dotenv
 from discord.ext import commands
 from datetime import datetime, timedelta
+from discord.utils import get
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_BUBUBOT_TOKEN')
@@ -122,8 +123,8 @@ async def greet(ctx, user: discord.User=None):
         user = sorted_member_list[-1]
     else:
         user = [x for x in ctx.guild.members if x.id == user.id][0]
+    
     # check if the user has join more than 1 day
-
     now = datetime.now()
     difference = now - user.joined_at
     if (difference <= timedelta(days=1)):
@@ -141,6 +142,24 @@ async def greet(ctx, user: discord.User=None):
             "https://tenor.com/view/grand-blue-cheers-beer-party-anime-gif-16490634"
         )
     await ctx.send(response)
+
+@bot.command(name='roleping', help="A person with a given role pings all the people with that role")
+async def handsome(ctx):
+    message = ctx.message
+    role = message.content[12:].lstrip()
+    print(role)
+
+    if role is None:
+        await ctx.send("Sorry pal, please specify the role name for me to ping!")
+        return
+    
+    searched_role = get(ctx.guild.roles, name=role)
+    if searched_role is None:
+        await ctx.send("Sorry pal, you specified a wrong role name :(")
+        return
+
+    sender = ctx.author
+    await ctx.send(f'Hello {searched_role.mention}, <@{sender.id}> wants to ping you to do something hideous!')
 
 @bot.event
 async def on_command_error(ctx, error):
