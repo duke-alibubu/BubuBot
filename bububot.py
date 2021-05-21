@@ -4,16 +4,43 @@ import os
 import discord
 import random
 import numpy as np
+import pyrebase
 from discord import channel
 from dotenv import load_dotenv
 from discord.ext import commands
 from datetime import datetime, timedelta
 from discord.utils import get
+from random import randrange
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_BUBUBOT_TOKEN')
 SERVER = os.getenv('SERVER_NAME')
 INFO_MSG = os.getenv('INFO_MESSAGE')
+
+#firebase auth info
+firebase_apiKey = os.getenv('firebase_apiKey')
+firebase_authDomain = os.getenv('firebase_authDomain')
+firebase_projectId = os.getenv('firebase_projectId')
+firebase_storageBucket = os.getenv('firebase_storageBucket')
+firebase_messagingSenderId = os.getenv('firebase_messagingSenderId')
+firebase_appId = os.getenv('firebase_appId')
+firebase_measurementId = os.getenv('firebase_measurementId')
+firebase_dbURL = os.getenv('firebase_dbURL')
+
+firebase_config = {
+    "apiKey": firebase_apiKey,
+    "authDomain": firebase_authDomain,
+    "projectId": firebase_projectId,
+    "storageBucket": firebase_storageBucket,
+    "messagingSenderId": firebase_messagingSenderId,
+    "appId": firebase_appId,
+    "measurementId": firebase_measurementId,
+    "databaseURL": firebase_dbURL
+}
+
+firebase = pyrebase.initialize_app(firebase_config)
+storage = firebase.storage()
+
 ANNOY_MSGS = [
         'you ugly bonobo!',
         'you eternal virgin!',
@@ -165,8 +192,11 @@ async def roleping(ctx):
 
 @bot.command(name='ass', help="Display an ass.")
 async def ass(ctx):
-    await ctx.send("Yes, I see that you are a man of culture as well.\n" + 
-        "https://pbs.twimg.com/media/EwQVyWOXIAA4vj2?format=jpg&name=360x360")
+    MAX = 3
+    img_path = f'ass/{randrange(MAX) + 1}.jpg'
+    img_url = storage.child(img_path).get_url(None)
+    await ctx.send("Ah, I see that you are a man of culture as well.")
+    await ctx.send(img_url)
 
 @bot.event
 async def on_command_error(ctx, error):
