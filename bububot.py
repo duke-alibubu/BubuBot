@@ -183,7 +183,7 @@ async def roleping(ctx):
     if searched_role is None:
         await ctx.send("Sorry pal, you specified a wrong role name :(")
         return
-
+    
     sender = ctx.author
     if searched_role in sender.roles:
         await ctx.send(f'Hello {searched_role.mention}, <@{sender.id}> wants to ping you to do something hideous!')
@@ -192,10 +192,13 @@ async def roleping(ctx):
 
 @bot.command(name='ass', help="Display an ass.")
 async def ass(ctx):
+    if not ctx.channel.is_nsfw():
+        await ctx.send("Sorry pal, you can only use this command in a NSFW channel.")
+        return
     MAX = 3
     img_path = f'ass/{randrange(MAX) + 1}.jpg'
     img_url = storage.child(img_path).get_url(None)
-    await ctx.send("Ah, I see that you are a man of culture as well.")
+    await ctx.send("Ah I see, you are a man of culture as well.")
     await ctx.send(img_url)
 
 @bot.event
