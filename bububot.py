@@ -16,7 +16,7 @@ from random import randrange
 load_dotenv()
 TOKEN = os.getenv('DISCORD_BUBUBOT_TOKEN')
 SERVER = os.getenv('SERVER_NAME')
-INFO_MSG = os.getenv('INFO_MESSAGE')
+AUTHOR_ID = os.getenv('BUBU_DISCORD_ID')
 
 #firebase auth info
 firebase_apiKey = os.getenv('firebase_apiKey')
@@ -110,11 +110,6 @@ def lavenshtein_dist(s1, s2):
 #         f'{client.user} is connected to the following guild:\n'
 #         f'{guild.name}(id: {guild.id})'
 #     )
-
-@bot.command(name='info', help='My info')
-async def info(ctx):
-    response = INFO_MSG
-    await ctx.send(response)
 
 @bot.command(name='annoy', help='Me give u free insults!')
 async def annoy(ctx):
@@ -241,6 +236,23 @@ async def blush(ctx, msg_id: int = None, channel: discord.TextChannel=None):
     embed.set_footer(text=f'Message sent at at {msg.created_at.strftime("%m/%d/%Y, %H:%M:%S")} UTC in #{msg.channel.name}')
     await ctx.send(embed=embed)
 
+@bot.command(name='about', help='My info & acknowledgement')
+async def about(ctx):
+    embed = discord.Embed(
+        title = f'BubuBot by Alibubu',
+        color=discord.Colour.dark_blue()
+    )
+    creator = await bot.fetch_user(AUTHOR_ID)
+
+    embed.insert_field_at(0, name="Creator", value =  f'<@{AUTHOR_ID}>', inline=False)
+    embed.insert_field_at(1, name="GitHub Link", value = "https://github.com/duke-alibubu/BubuBot", inline=False)
+    embed.insert_field_at(2, name="About me", value = "Born from the creator's idea to try out a Discord bot during his last summer holiday.\nThis is a product made for passion instead of monetization purpose, so the author hopes that users enjoy trying it as well as having the tolerance for the bot =)", inline=False)
+    embed.insert_field_at(3, name="What Can I Do", value = "Some lame stuffs like message quoting, annoying ppl, giving random opinions, and some Grand Blue & Temple content-related commands.\nUse bb!help for more info!", inline=False)
+    embed.insert_field_at(4, name="Acknowledgements", value = "My sincerest gratitude for my friends Ymity, Anders Hass, Tintin, FIRE2GO, Shibito & Vik for helping me test as well as giving suggestions.\nMy thanks to Gyro, Alan and Norminee for providing me some quality images too.\nAnd last but not least, thank you dear users for using me!!!", inline=False)
+
+    embed.set_thumbnail(url=creator.avatar_url)
+    embed.set_footer(text="Made with passion during the summer of 2021. Ah, how much I hate COVID.")
+    await ctx.send(embed=embed)
 
 @bot.event
 async def on_command_error(ctx, error):
