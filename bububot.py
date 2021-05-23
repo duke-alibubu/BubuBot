@@ -237,7 +237,7 @@ async def blush(ctx, msg_id: int = None, channel: discord.TextChannel=None):
     
     embed.set_thumbnail(url=msg.author.avatar_url)
     embed.description = f'[Jump to the message]({msg.jump_url})'
-    embed.set_footer(text=f'Sent at at {msg.created_at.strftime("%m/%d/%Y, %H:%M:%S")} in #{msg.channel.name}')
+    embed.set_footer(text=f'Sent at at {msg.created_at.strftime("%m/%d/%Y, %H:%M:%S")} UTC in #{msg.channel.name}')
 
     await ctx.send(embed=embed)
 
