@@ -211,12 +211,24 @@ async def blush(ctx):
     await ctx.send(img_url)
 
 @bot.command(name='quote', help="Quote a sent message")
-async def blush(ctx, msg_id: int = None):
+async def blush(ctx, msg_id: int = None, channel: discord.TextChannel=None):
     if msg_id is None:
         await ctx.send("Please specify a message ID")
         return
-    msg = await ctx.fetch_message(msg_id)
-    await ctx.send(msg)
+    if channel is None:
+        channel = ctx.channel
+    msg = await channel.fetch_message(msg_id)
+    embed = discord.Embed(
+        title = f'Message from {msg.author.name}',
+        color=discord.Colour.purple()
+    )
+    embed.add_field(name="Author", value =  f'<@{msg.author.id}>')
+    embed.add_field(name="said: ", value =  msg.content)
+    embed.set_thumbnail(url=msg.author.avatar_url)
+    embed.description = f'[Jump to the message]({msg.jump_url})'
+    embed.set_footer(text=f'Sent at at {msg.created_at.strftime("%m/%d/%Y, %H:%M:%S")} in #{msg.channel.name}')
+
+    await ctx.send(embed=embed)
 
 
 @bot.event
