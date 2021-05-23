@@ -233,11 +233,14 @@ async def blush(ctx, msg_id: int = None, channel: discord.TextChannel=None):
 
 @bot.event
 async def on_command_error(ctx, error):
-    print(type(error.original))
+    print(type(error))
     if isinstance(error, commands.errors.CheckFailure):
         await ctx.send('No no no, testers are lovely, not handsome.')
-    if isinstance(error, commands.errors.CommandInvokeError):
+    elif isinstance(error, commands.errors.ChannelNotFound):
+        await ctx.send('Channel name is wrong, or you do not need the permission to read messages in this channel :(')
+    elif isinstance(error, commands.errors.CommandInvokeError):
         original = error.original
+        print(original)
         if isinstance(original, discord.errors.NotFound):
             await ctx.send('No message with such ID exists. Please check it again my friend :<')
 
