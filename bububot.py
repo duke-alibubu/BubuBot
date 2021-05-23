@@ -225,11 +225,15 @@ async def blush(ctx, msg_id: int = None, channel: discord.TextChannel=None):
 
     embed.add_field(name="Author", value =  f'<@{msg.author.id}>')
 
-    is_censored = channel.id != ctx.channel.id and (channel.is_nsfw or 'spoiler' in channel.name)
-    if is_censored:
-        embed.add_field(name="said: ", value =  f"||{msg.content}||")
+    
+    if len(msg.content) > 1024:
+        embed.add_field(name="Message too long :(", value =  "Sorry I cannot quote it here")
     else:
-        embed.add_field(name="said: ", value =  msg.content)
+        is_censored = channel.id != ctx.channel.id and (channel.is_nsfw or 'spoiler' in channel.name)
+        if is_censored:
+            embed.add_field(name="said: ", value =  f"||{msg.content}||")
+        else:
+            embed.add_field(name="said: ", value =  msg.content)
     
     embed.set_thumbnail(url=msg.author.avatar_url)
     embed.description = f'[Jump to the message]({msg.jump_url})'
