@@ -133,11 +133,6 @@ async def opinion(ctx):
         response = calculate_best_opinion(interest)
     await ctx.send(response)
 
-@bot.command(name='handsome', help="Are you handsome?")
-@commands.has_role('Nub Dev')
-async def handsome(ctx):
-    await ctx.send("Yes, Developers are handsome.")
-
 @bot.command(name='greet', help="Friendly greet a person :D")
 async def greet(ctx, user: discord.User=None):
     if user is None:
@@ -258,7 +253,7 @@ async def about(ctx):
 async def on_command_error(ctx, error):
     print(type(error))
     if isinstance(error, commands.errors.CheckFailure):
-        await ctx.send('No no no, testers are lovely, not handsome.')
+        await ctx.send('Sorry my friends, you do not have the necessary permission to make me do this.')
     elif isinstance(error, commands.errors.ChannelNotFound):
         await ctx.send('Channel name is wrong, or you do not need the permission to read messages in this channel :(')
     elif isinstance(error, commands.errors.CommandInvokeError):
