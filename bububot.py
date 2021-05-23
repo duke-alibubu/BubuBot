@@ -111,7 +111,7 @@ def lavenshtein_dist(s1, s2):
 #         f'{guild.name}(id: {guild.id})'
 #     )
 
-@bot.command(name='annoy', help='Me give u free insults!')
+@bot.command(name='annoy', help='Me give u free insults! Just type bb!annoy and enjoy the mockery.')
 async def annoy(ctx):
     message = ctx.message
     response = "Let me annoy you real quick..."
@@ -122,7 +122,7 @@ async def annoy(ctx):
     await member.dm_channel.send(
     f'Hey {member.name}, {random.choice(ANNOY_MSGS)}')
 
-@bot.command(name='opinion', help="The bot's opinion about something")
+@bot.command(name='opinion', help="The bot's opinion about something. bb!opinion [something] is the format!")
 async def opinion(ctx):
     message = ctx.message
     interest = message.content[11:]
@@ -133,7 +133,7 @@ async def opinion(ctx):
         response = calculate_best_opinion(interest)
     await ctx.send(response)
 
-@bot.command(name='greet', help="Friendly greet a person :D")
+@bot.command(name='greet', help="Friendly greet a person. bb!greet [user_id] to greet them. if user_id is not specified, latest-joined user will be greeted.")
 async def greet(ctx, user: discord.User=None):
     if user is None:
         # if the user is not specified, latest-joined user will be tagged
@@ -161,7 +161,7 @@ async def greet(ctx, user: discord.User=None):
         )
     await ctx.send(response)
 
-@bot.command(name='roleping', help="A person with a given role pings all the people with that role")
+@bot.command(name='roleping', help="A person with a given role pings all the people with that role. bb!roleping [role_name} is how you do it!")
 async def roleping(ctx):
     message = ctx.message
     role = message.content[12:].lstrip()
@@ -181,7 +181,7 @@ async def roleping(ctx):
     else:
         await ctx.send(f'Sorry pal, you do not have the role {role} :(')
 
-@bot.command(name='ass', help="Display an ass.")
+@bot.command(name='ass', help="Display an ass. bb!ass and enjoy the lewdness.")
 async def ass(ctx):
     if not ctx.channel.is_nsfw():
         await ctx.send("Sorry pal, you can only use this command in a NSFW channel.")
@@ -192,7 +192,7 @@ async def ass(ctx):
     await ctx.send("Ah I see, you are a man of culture as well.")
     await ctx.send(img_url)
 
-@bot.command(name='blush', help="Ya make me blush")
+@bot.command(name='blush', help="Ya make me blush. bb!blush and enjoy the cuteness.")
 async def blush(ctx):
     MAX = 13
     img_path = f'blush/{randrange(MAX) + 1}.jpg'
@@ -200,7 +200,7 @@ async def blush(ctx):
     await ctx.send("B... Baka!")
     await ctx.send(img_url)
 
-@bot.command(name='quote', help="Quote a sent message")
+@bot.command(name='quote', help="Quote a sent message. bb!quote [message_id] #[channel_name] is the format. If [channel_name] is not specified, the bot will look up in the current channel by default.")
 async def blush(ctx, msg_id: int = None, channel: discord.TextChannel=None):
     if msg_id is None:
         await ctx.send("Please specify a message ID")
