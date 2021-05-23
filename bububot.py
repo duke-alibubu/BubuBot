@@ -222,8 +222,15 @@ async def blush(ctx, msg_id: int = None, channel: discord.TextChannel=None):
         title = f'Message from {msg.author.name}',
         color=discord.Colour.purple()
     )
+
     embed.add_field(name="Author", value =  f'<@{msg.author.id}>')
-    embed.add_field(name="said: ", value =  msg.content)
+
+    is_censored = channel.id != ctx.channel.id and (channel.is_nsfw or 'spoiler' in channel.name)
+    if is_censored:
+        embed.add_field(name="said: ", value =  f"||{msg.content}||")
+    else:
+        embed.add_field(name="said: ", value =  msg.content)
+    
     embed.set_thumbnail(url=msg.author.avatar_url)
     embed.description = f'[Jump to the message]({msg.jump_url})'
     embed.set_footer(text=f'Sent at at {msg.created_at.strftime("%m/%d/%Y, %H:%M:%S")} in #{msg.channel.name}')
@@ -240,7 +247,6 @@ async def on_command_error(ctx, error):
         await ctx.send('Channel name is wrong, or you do not need the permission to read messages in this channel :(')
     elif isinstance(error, commands.errors.CommandInvokeError):
         original = error.original
-        print(original)
         if isinstance(original, discord.errors.NotFound):
             await ctx.send('No message with such ID exists. Please check it again my friend :<')
 
