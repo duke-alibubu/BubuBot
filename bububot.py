@@ -227,18 +227,18 @@ async def blush(ctx, msg_id: int = None, channel: discord.TextChannel=None):
 
     
     if len(msg.content) > 1024:
-        embed.add_field(name="Message too long :(", value =  "Sorry I cannot quote it here")
+        quoted_value = f'{msg.content[:1020]}...'
     else:
         is_censored = channel.id != ctx.channel.id and (channel.is_nsfw or 'spoiler' in channel.name)
         if is_censored:
-            embed.add_field(name="said: ", value =  f"||{msg.content}||")
+            quoted_value = f"||{msg.content}||"
         else:
-            embed.add_field(name="said: ", value =  msg.content)
-    
-    embed.set_thumbnail(url=msg.author.avatar_url)
-    embed.description = f'[Jump to the message]({msg.jump_url})'
-    embed.set_footer(text=f'Sent at at {msg.created_at.strftime("%m/%d/%Y, %H:%M:%S")} UTC in #{msg.channel.name}')
+            quoted_value = msg.content
+    embed.add_field(name="said: ", value =  quoted_value)
 
+    embed.set_thumbnail(url=msg.author.avatar_url)
+    embed.insert_field_at(2, name="Link", value=f'[Jump to the message]({msg.jump_url})', inline=False)
+    embed.set_footer(text=f'Message sent at at {msg.created_at.strftime("%m/%d/%Y, %H:%M:%S")} UTC in #{msg.channel.name}')
     await ctx.send(embed=embed)
 
 
