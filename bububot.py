@@ -3,6 +3,7 @@ import os
 
 import discord
 import random
+from discord.ext.commands import errors
 import numpy as np
 import pyrebase
 from discord import channel
@@ -195,7 +196,7 @@ async def ass(ctx):
     if not ctx.channel.is_nsfw():
         await ctx.send("Sorry pal, you can only use this command in a NSFW channel.")
         return
-    MAX = 6
+    MAX = 8
     img_path = f'ass/{randrange(MAX) + 1}.jpg'
     img_url = storage.child(img_path).get_url(None)
     await ctx.send("Ah I see, you are a man of culture as well.")
@@ -209,8 +210,24 @@ async def blush(ctx):
     await ctx.send("B... Baka!")
     await ctx.send(img_url)
 
+@bot.command(name='quote', help="Quote a sent message")
+async def blush(ctx, msg_id: int = None):
+    if msg_id is None:
+        await ctx.send("Please specify a message ID")
+        return
+    msg = await ctx.fetch_message(msg_id)
+    await ctx.send(msg)
+
+
 @bot.event
 async def on_command_error(ctx, error):
+    print(type(error.original))
     if isinstance(error, commands.errors.CheckFailure):
         await ctx.send('No no no, testers are lovely, not handsome.')
+    if isinstance(error, commands.errors.CommandInvokeError):
+        original = error.original
+        if isinstance(original, discord.errors.NotFound):
+            await ctx.send('No message with such ID exists. Please check it again my friend :<')
+
+
 bot.run(TOKEN)
