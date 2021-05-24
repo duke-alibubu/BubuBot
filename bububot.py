@@ -283,7 +283,7 @@ async def roleping_add(ctx):
         return
 
     message = ctx.message
-    role_name = message.content[12:].lstrip()
+    role_name = message.content[9:].lstrip()
 
     if role_name is None:
         await ctx.send("Sorry pal, please specify a role name for me to configure!")
