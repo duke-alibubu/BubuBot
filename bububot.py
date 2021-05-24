@@ -4,6 +4,7 @@ import os
 import discord
 import random
 from discord.ext.commands import errors
+from discord.ext.commands.core import has_permissions
 import numpy as np
 import pyrebase
 from discord import channel
@@ -12,6 +13,7 @@ from discord.ext import commands
 from datetime import datetime, timedelta
 from discord.utils import get
 from random import randrange
+from discord.utils import find
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_BUBUBOT_TOKEN')
@@ -41,6 +43,7 @@ firebase_config = {
 
 firebase = pyrebase.initialize_app(firebase_config)
 storage = firebase.storage()
+db = firebase.database()
 
 ANNOY_MSGS = [
         'you ugly bonobo!',
@@ -163,6 +166,11 @@ async def greet(ctx, user: discord.User=None):
 
 @bot.command(name='roleping', help="A person with a given role pings all the people with that role. bb!roleping [role_name} is how you do it!")
 async def roleping(ctx):
+    guild = ctx.guild
+    if guild is None:
+        await ctx.send(f'An error occurred and this server is no longer in my database. Please contact the creator <@{AUTHOR_ID}> for help regarding this matter.')
+        return
+
     message = ctx.message
     role = message.content[12:].lstrip()
 
@@ -175,6 +183,14 @@ async def roleping(ctx):
         await ctx.send("Sorry pal, you specified a wrong role name :(")
         return
     
+    pingable_roles = db.child("guilds").child(guild.id).child("pingable_roles").get().val()
+    if pingable_roles is None:
+        await ctx.send(f'Sorry pal, this role is not pingable.\nCurrently no roles have been added to the pingable lists, call an admin to do it!')
+        return
+    elif not role in pingable_roles.keys():
+        await ctx.send(f'Sorry pal, this role is not pingable.\nThe list of pingable roles are: {", ".join(pingable_roles.keys())}')
+        return
+
     sender = ctx.author
     if searched_role in sender.roles:
         await ctx.send(f'Hello {searched_role.mention}, <@{sender.id}> wants to ping you to do something hideous!')
@@ -249,6 +265,47 @@ async def about(ctx):
     embed.set_footer(text="Made with passion during the summer of 2021. Ah, how much I hate COVID.")
     await ctx.send(embed=embed)
 
+@bot.command(name='reset', help="An user with admin permission resets all the data of the server. Which means, empty the pingable lists.")
+@has_permissions(administrator=True)
+async def setup(ctx):
+    guild = ctx.guild
+    db.child("guilds").child(guild.id).remove()
+    db.child("guilds").child(guild.id).set({"name": guild.name})
+    await ctx.send("Successfully reset all data of this server. The list of pingable roles are empty now.")
+    
+
+@bot.command(name="rpadd", help="An user with admin permission add a role to the list of pingable roles.")
+@has_permissions(administrator=True)
+async def roleping_add(ctx):
+    guild = ctx.guild
+    if guild is None:
+        await ctx.send(f'An error occurred and this server is no longer in my database. Please contact the creator <@{AUTHOR_ID}> for help regarding this matter.')
+        return
+
+    message = ctx.message
+    role_name = message.content[12:].lstrip()
+
+    if role_name is None:
+        await ctx.send("Sorry pal, please specify a role name for me to configure!")
+        return
+    
+    searched_role = get(guild.roles, name = role_name)
+    if searched_role is None:
+        await ctx.send("Sorry pal, you specified an invalid role name :(")
+        return
+
+    db.child("guilds").child(guild.id).child("pingable_roles").update({role_name: "True"})
+    await ctx.send(f'Successfully add the role {role_name} to the list of pingable roles!')
+
+@bot.event
+async def on_guild_join(guild):
+    # general = find(lambda x: x.name == 'general',  guild.text_channels)
+    # if general and general.permissions_for(guild.me).send_messages:
+    #     await general.send('Hello {}!'.format(guild.name))
+    # print(guild.id)
+    # db.child("guilds").child(guild.id)
+    db.child("guilds").child(guild.id).set({"name": guild.name})
+
 @bot.event
 async def on_command_error(ctx, error):
     print(type(error))
@@ -258,8 +315,7 @@ async def on_command_error(ctx, error):
         await ctx.send('Channel name is wrong, or you do not need the permission to read messages in this channel :(')
     elif isinstance(error, commands.errors.CommandInvokeError):
         original = error.original
+        print(original)
         if isinstance(original, discord.errors.NotFound):
             await ctx.send('No message with such ID exists. Please check it again my friend :<')
-
-
 bot.run(TOKEN)
