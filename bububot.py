@@ -352,7 +352,7 @@ async def roleping_list(ctx):
     pingable_roles = db.child("guilds").child(guild.id).child("pingable_roles").get().val()
     await ctx.send(f'The list of pingable roles are:\n{", ".join(pingable_roles.keys())}')
 
-@bot.command(name='edit', help="An user with admin permission resets all the data of the server. Which means, empty the pingable lists.")
+@bot.command(name='edit', help="An user with admin permission edit the configurations of the server. Possible actions are: \nbb!edit reset: Delete all the pingable roles.\nbb!edit roleping/rp add [role_id]: Add a role to the list of pingable roles.\nbb!edit roleping/rp remove/rm [role_id]: Remove a role from the list of pingable roles.\n")
 @has_permissions(administrator=True)
 async def edit(ctx, category=None, action=None, param=None):
     if category is None:
@@ -372,6 +372,14 @@ async def edit(ctx, category=None, action=None, param=None):
             await ctx.send("Sorry my friends, currently the only possible actions for `config roleping` are `add`, `remove/rm` or `list`.")
     else:
         await ctx.send("Sorry my friends, currently the only possible categories for config are `roleping/rp` or `reset`.")
+
+@bot.command(name='list', help="List the list of rolepings, or something else.\nbb!list rp/roleping is to list all the pingable roles!")
+async def edit(ctx, category=None):
+    if category is None:
+        await ctx.send("Please specify a category to list. For example `bb!list roleping/rp`, etc.")
+    elif category == "roleping" or category == "rp":
+        await roleping_list(ctx)
+
 @bot.event
 async def on_guild_join(guild):
     # general = find(lambda x: x.name == 'general',  guild.text_channels)
