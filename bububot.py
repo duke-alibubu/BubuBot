@@ -292,6 +292,24 @@ async def roleping_add(ctx, role_id):
     db.child("guilds").child(guild.id).child("pingable_roles").update({searched_role.name: "True"})
     await ctx.send(f'Successfully add the role {searched_role.name} to the list of pingable roles!')
 
+async def roleping_remove(ctx, role_id):
+    guild = ctx.guild
+    if guild is None:
+        await ctx.send(f'An error occurred and this server is no longer in my database. Please contact the creator <@{AUTHOR_ID}> for help regarding this matter.')
+        return
+
+    if role_id is None:
+        await ctx.send("Sorry pal, please specify a role ID for me to configure!")
+        return
+
+    role_id = int(role_id)
+    searched_role = guild.get_role(role_id)
+    if searched_role is None:
+        await ctx.send("Sorry pal, you specified an invalid role ID :(")
+        return
+
+    db.child("guilds").child(guild.id).child("pingable_roles").child(searched_role.name).remove()
+    await ctx.send(f'Successfully remove the role {searched_role.name} from the list of pingable roles!')
 async def roleping_list(ctx):
     guild = ctx.guild
     if guild is None:
@@ -313,6 +331,8 @@ async def config(ctx, category=None, action=None, param=None):
             await ctx.send("Please specify an action for the `roleping` category. For example `bb!config roleping add`, `bb!config roleping list`, etc.")
         elif action == 'add':
             await roleping_add(ctx, param)
+        elif action == 'remove' or action == 'rm':
+            await roleping_remove(ctx, param)
         elif action == "list":
             await roleping_list(ctx)
         else:
