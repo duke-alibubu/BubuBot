@@ -188,7 +188,7 @@ async def roleping(ctx):
         await ctx.send(f'Sorry pal, this role is not pingable.\nCurrently no roles have been added to the pingable lists, call an admin to do it!')
         return
     elif not role in pingable_roles.keys():
-        await ctx.send(f'Sorry pal, this role is not pingable.\nThe list of pingable roles are: {", ".join(pingable_roles.keys())}')
+        await ctx.send(f'Sorry pal, this role is not pingable.')
         return
 
     sender = ctx.author
@@ -292,6 +292,15 @@ async def roleping_add(ctx, role_id):
     db.child("guilds").child(guild.id).child("pingable_roles").update({searched_role.name: "True"})
     await ctx.send(f'Successfully add the role {searched_role.name} to the list of pingable roles!')
 
+async def roleping_list(ctx):
+    guild = ctx.guild
+    if guild is None:
+        await ctx.send(f'An error occurred and this server is no longer in my database. Please contact the creator <@{AUTHOR_ID}> for help regarding this matter.')
+        return
+
+    pingable_roles = db.child("guilds").child(guild.id).child("pingable_roles").get().val()
+    await ctx.send(f'The list of pingable roles are:\n{", ".join(pingable_roles.keys())}')
+
 @bot.command(name='config', help="An user with admin permission resets all the data of the server. Which means, empty the pingable lists.")
 @has_permissions(administrator=True)
 async def config(ctx, category=None, action=None, param=None):
@@ -304,6 +313,10 @@ async def config(ctx, category=None, action=None, param=None):
             await ctx.send("Please specify an action for the `roleping` category. For example `bb!config roleping add`, `bb!config roleping list`, etc.")
         elif action == 'add':
             await roleping_add(ctx, param)
+        elif action == "list":
+            await roleping_list(ctx)
+        else:
+            await ctx.send("Sorry my friends, currently the only possible actions for `config roleping` are `add`, `remove/rm` or `list`.")
     else:
         await ctx.send("Sorry my friends, currently the only possible categories for config are `roleping/rp` or `reset`.")
 @bot.event
