@@ -57,7 +57,9 @@ OPINION_MSGS = [
     'Dogshit',
     'OP',
     "That is just broken, right?",
-    'Ehh, just OK'
+    'Ehh, just OK',
+    'Omega Cringe',
+    'Good Stuff',
 ]
 intents = discord.Intents.default()
 intents.members = True
@@ -379,6 +381,8 @@ async def edit(ctx, category=None):
         await ctx.send("Please specify a category to list. For example `bb!list roleping/rp`, etc.")
     elif category == "roleping" or category == "rp":
         await roleping_list(ctx)
+    else:
+        await ctx.send("Sorry my friends, currently the only possible categories for list are `bb!list roleping/rp`, etc.")
 
 @bot.event
 async def on_guild_join(guild):
