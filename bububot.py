@@ -164,7 +164,7 @@ async def greet(ctx, user: discord.User=None):
         )
     await ctx.send(response)
 
-@bot.command(name='roleping', help="A person with a given role pings all the people with that role. bb!roleping [role_name} is how you do it!")
+@bot.command(name='roleping', help="A person with a given role pings all the people with that role. bb!roleping [role_name] is how you do it!")
 async def roleping(ctx):
     guild = ctx.guild
     if guild is None:
@@ -267,13 +267,19 @@ async def about(ctx):
     embed.set_footer(text="Made with passion during the summer of 2021. Ah, how much I hate COVID.")
     await ctx.send(embed=embed)
 
-@bot.command(name='reset', help="An user with admin permission resets all the data of the server. Which means, empty the pingable lists.")
-@has_permissions(administrator=True)
-async def setup(ctx):
+async def reset(ctx):
     guild = ctx.guild
     db.child("guilds").child(guild.id).remove()
     db.child("guilds").child(guild.id).set({"name": guild.name})
     await ctx.send("Successfully reset all data of this server. The list of pingable roles are empty now.")
+
+@bot.command(name='config', help="An user with admin permission resets all the data of the server. Which means, empty the pingable lists.")
+@has_permissions(administrator=True)
+async def config(ctx, category=None, action=None, param=None):
+    if category is None:
+        await ctx.send("Please specify a config category. For example `bb!config reset`, etc.")
+    elif category == 'reset':
+        await reset(ctx)
     
 
 @bot.command(name="rpadd", help="An user with admin permission add a role to the list of pingable roles.")
@@ -320,4 +326,6 @@ async def on_command_error(ctx, error):
         print(original)
         if isinstance(original, discord.errors.NotFound):
             await ctx.send('No message with such ID exists. Please check it again my friend :<')
+    elif isinstance(error, commands.errors.CommandNotFound):
+        await ctx.send('My apologies, you specified the wrong command! Type `bb!help` for the list of possible commands.')
 bot.run(TOKEN)
