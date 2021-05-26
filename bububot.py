@@ -164,13 +164,48 @@ async def greet(ctx, user: discord.User=None):
         )
     await ctx.send(response)
 
-@bot.command(aliases=['roleping', 'rp'], help="A person with a given role pings all the people with that role. bb!roleping [role_name] is how you do it!")
-async def roleping_ping(ctx, role):
+@bot.command(name='roleping', help="A person with a given role pings all the people with that role. bb!roleping [role_name] is how you do it!")
+async def roleping(ctx):
     guild = ctx.guild
     if guild is None:
         await ctx.send(f'An error occurred and this server is no longer in my database. Please contact the creator <@{AUTHOR_ID}> for help regarding this matter.')
         return
-    print(role)
+
+    message = ctx.message
+    role = message.content[12:].lstrip()
+
+    if role is None:
+        await ctx.send("Sorry pal, please specify the role name for me to ping!")
+        return
+    
+    searched_role = get(ctx.guild.roles, name=role)
+    if searched_role is None:
+        await ctx.send("Sorry pal, you specified a wrong role name :(")
+        return
+    
+    pingable_roles = db.child("guilds").child(guild.id).child("pingable_roles").get().val()
+    if pingable_roles is None:
+        await ctx.send(f'Sorry pal, this role is not pingable.\nCurrently no roles have been added to the pingable lists, call an admin to do it!')
+        return
+    elif not role in pingable_roles.keys():
+        await ctx.send(f'Sorry pal, this role is not pingable.')
+        return
+
+    sender = ctx.author
+    if searched_role in sender.roles:
+        await ctx.send(f'Hello {searched_role.mention}, <@{sender.id}> wants to ping you to do something hideous!')
+    else:
+        await ctx.send(f'Sorry pal, you do not have the role {role} :(')
+
+@bot.command(name='rp', help="A person with a given role pings all the people with that role. bb!roleping [role_name] is how you do it!")
+async def roleping_rp(ctx):
+    guild = ctx.guild
+    if guild is None:
+        await ctx.send(f'An error occurred and this server is no longer in my database. Please contact the creator <@{AUTHOR_ID}> for help regarding this matter.')
+        return
+
+    message = ctx.message
+    role = message.content[6:].lstrip()
 
     if role is None:
         await ctx.send("Sorry pal, please specify the role name for me to ping!")
