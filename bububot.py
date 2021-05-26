@@ -273,6 +273,25 @@ async def reset(ctx):
     db.child("guilds").child(guild.id).set({"name": guild.name})
     await ctx.send("Successfully reset all data of this server. The list of pingable roles are empty now.")
 
+async def roleping_add(ctx, role_id):
+    guild = ctx.guild
+    if guild is None:
+        await ctx.send(f'An error occurred and this server is no longer in my database. Please contact the creator <@{AUTHOR_ID}> for help regarding this matter.')
+        return
+
+    if role_id is None:
+        await ctx.send("Sorry pal, please specify a role ID for me to configure!")
+        return
+
+    role_id = int(role_id)
+    searched_role = guild.get_role(role_id)
+    if searched_role is None:
+        await ctx.send("Sorry pal, you specified an invalid role ID :(")
+        return
+
+    db.child("guilds").child(guild.id).child("pingable_roles").update({searched_role.name: "True"})
+    await ctx.send(f'Successfully add the role {searched_role.name} to the list of pingable roles!')
+
 @bot.command(name='config', help="An user with admin permission resets all the data of the server. Which means, empty the pingable lists.")
 @has_permissions(administrator=True)
 async def config(ctx, category=None, action=None, param=None):
@@ -280,31 +299,13 @@ async def config(ctx, category=None, action=None, param=None):
         await ctx.send("Please specify a config category. For example `bb!config reset`, etc.")
     elif category == 'reset':
         await reset(ctx)
-    
-
-@bot.command(name="rpadd", help="An user with admin permission add a role to the list of pingable roles.")
-@has_permissions(administrator=True)
-async def roleping_add(ctx):
-    guild = ctx.guild
-    if guild is None:
-        await ctx.send(f'An error occurred and this server is no longer in my database. Please contact the creator <@{AUTHOR_ID}> for help regarding this matter.')
-        return
-
-    message = ctx.message
-    role_name = message.content[9:].lstrip()
-
-    if role_name is None:
-        await ctx.send("Sorry pal, please specify a role name for me to configure!")
-        return
-    
-    searched_role = get(guild.roles, name = role_name)
-    if searched_role is None:
-        await ctx.send("Sorry pal, you specified an invalid role name :(")
-        return
-
-    db.child("guilds").child(guild.id).child("pingable_roles").update({role_name: "True"})
-    await ctx.send(f'Successfully add the role {role_name} to the list of pingable roles!')
-
+    elif category == "roleping" or category == "rp":
+        if action is None:
+            await ctx.send("Please specify an action for the `roleping` category. For example `bb!config roleping add`, `bb!config roleping list`, etc.")
+        elif action == 'add':
+            await roleping_add(ctx, param)
+    else:
+        await ctx.send("Sorry my friends, currently the only possible categories for config are `roleping/rp` or `reset`.")
 @bot.event
 async def on_guild_join(guild):
     # general = find(lambda x: x.name == 'general',  guild.text_channels)
