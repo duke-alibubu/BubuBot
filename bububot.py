@@ -319,9 +319,9 @@ async def roleping_list(ctx):
     pingable_roles = db.child("guilds").child(guild.id).child("pingable_roles").get().val()
     await ctx.send(f'The list of pingable roles are:\n{", ".join(pingable_roles.keys())}')
 
-@bot.command(name='config', help="An user with admin permission resets all the data of the server. Which means, empty the pingable lists.")
+@bot.command(name='edit', help="An user with admin permission resets all the data of the server. Which means, empty the pingable lists.")
 @has_permissions(administrator=True)
-async def config(ctx, category=None, action=None, param=None):
+async def edit(ctx, category=None, action=None, param=None):
     if category is None:
         await ctx.send("Please specify a config category. For example `bb!config reset`, etc.")
     elif category == 'reset':
