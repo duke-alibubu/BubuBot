@@ -164,15 +164,13 @@ async def greet(ctx, user: discord.User=None):
         )
     await ctx.send(response)
 
-@bot.command(name='roleping', help="A person with a given role pings all the people with that role. bb!roleping [role_name] is how you do it!")
-async def roleping(ctx):
+@bot.command(aliases=['roleping', 'rp'], help="A person with a given role pings all the people with that role. bb!roleping [role_name] is how you do it!")
+async def roleping_ping(ctx, role):
     guild = ctx.guild
     if guild is None:
         await ctx.send(f'An error occurred and this server is no longer in my database. Please contact the creator <@{AUTHOR_ID}> for help regarding this matter.')
         return
-
-    message = ctx.message
-    role = message.content[12:].lstrip()
+    print(role)
 
     if role is None:
         await ctx.send("Sorry pal, please specify the role name for me to ping!")
