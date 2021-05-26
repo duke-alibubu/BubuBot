@@ -234,6 +234,8 @@ async def blush(ctx, msg_id: int = None, channel: discord.TextChannel=None):
     
     if len(msg.content) > 1024:
         quoted_value = f'{msg.content[:1020]}...'
+    if len(msg.content) == 0:
+        quoted_value = "ERROR: This message contains some contents that cannot be displayed here. Please refer to the message link below."
     else:
         is_censored = channel.id != ctx.channel.id and (channel.is_nsfw or 'spoiler' in channel.name)
         if is_censored:
