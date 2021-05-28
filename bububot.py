@@ -15,7 +15,7 @@ from random import randrange
 from discord.utils import find
 
 load_dotenv()
-TOKEN = os.getenv('DISCORD_BUBUTEST_TOKEN')
+TOKEN = os.getenv('DISCORD_BUBUBOT_TOKEN')
 SERVER = os.getenv('SERVER_NAME')
 AUTHOR_ID = os.getenv('BUBU_DISCORD_ID')
 
@@ -62,7 +62,7 @@ OPINION_MSGS = [
 ]
 intents = discord.Intents.default()
 intents.members = True
-bot = commands.Bot(command_prefix='bbt!', intents=intents)
+bot = commands.Bot(command_prefix='bb!', intents=intents)
 
 def calculate_best_opinion(obj):
     scores = []
