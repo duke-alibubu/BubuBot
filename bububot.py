@@ -250,6 +250,24 @@ async def blush(ctx):
     await ctx.send("B... Baka!")
     await ctx.send(img_url)
 
+@bot.command(name='hpbd', help="Happy birthday to an user. bb!hpbd to congratulate them.")
+async def hpbd(ctx, user: discord.User=None):
+    if user is None:
+        await ctx.send("Please select the birthday boy/girl so that I can congratulate them!")
+        return
+    else:
+        user = [x for x in ctx.guild.members if x.id == user.id][0]
+    MAX = 2
+    num = randrange(MAX) + 1
+
+    img_path = f'hpbd/{num}.jpg'
+    img_url = storage.child(img_path).get_url(None)
+    if num == 1:
+        await ctx.send(f'Happy birthday dear <@{user.id}>, want me to give you a smooch?')
+    elif num == 2:
+        await ctx.send(f'Happy belated birthday <@{user.id}>, I hope you enjoy today as much as I enjoy diving.')
+    await ctx.send(img_url)
+
 @bot.command(name='quote', help="Quote a sent message. bb!quote [message_id] #[channel_name] is the format. If [channel_name] is not specified, the bot will look up in the current channel by default.")
 async def blush(ctx, msg_id: int = None, channel: discord.TextChannel=None):
     if msg_id is None:
