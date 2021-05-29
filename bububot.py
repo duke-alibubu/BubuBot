@@ -250,7 +250,7 @@ async def ass(ctx):
     MAX = 21
     img_path = f'tits/{randrange(MAX) + 1}.jpg'
     img_url = storage.child(img_path).get_url(None)
-    await ctx.send("Remember: In the end, Boobs - are nothing more like fake asses.")
+    await ctx.send("Remember: In the end, Boobs - are nothing more than fake asses.")
     await ctx.send(img_url)
 
 @bot.command(name='blush', help="Ya make me blush. bb!blush and enjoy the cuteness.")
