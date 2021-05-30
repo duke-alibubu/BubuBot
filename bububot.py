@@ -15,7 +15,7 @@ from random import randrange
 from discord.utils import find
 
 load_dotenv()
-TOKEN = os.getenv('DISCORD_BUBUTEST_TOKEN')
+TOKEN = os.getenv('DISCORD_BUBUBOT_TOKEN')
 SERVER = os.getenv('SERVER_NAME')
 AUTHOR_ID = os.getenv('BUBU_DISCORD_ID')
 
