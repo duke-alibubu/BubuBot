@@ -15,7 +15,7 @@ from random import randrange
 from discord.utils import find
 
 load_dotenv()
-TOKEN = os.getenv('DISCORD_BUBUBOT_TOKEN')
+TOKEN = os.getenv('DISCORD_BUBUTEST_TOKEN')
 SERVER = os.getenv('SERVER_NAME')
 AUTHOR_ID = os.getenv('BUBU_DISCORD_ID')
 
@@ -277,6 +277,13 @@ async def hpbd(ctx, user: discord.User=None):
         await ctx.send(f'Happy birthday dear <@{user.id}>, want me to give you a smooch?')
     elif num == 2:
         await ctx.send(f'Happy belated birthday <@{user.id}>, I hope you enjoy today as much as I enjoy diving.')
+    await ctx.send(img_url)
+
+@bot.command(name='gn', help="Says good night. bb!gn is da wei.")
+async def gn(ctx):
+    img_path = 'gn.jpeg'
+    img_url = storage.child(img_path).get_url(None)
+    await ctx.send("Good night and have a sweet dream there <3")
     await ctx.send(img_url)
 
 @bot.command(name='quote', help="Quote a sent message. bb!quote [message_id] #[channel_name] is the format. If [channel_name] is not specified, the bot will look up in the current channel by default.")
