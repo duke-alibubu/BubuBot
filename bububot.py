@@ -278,7 +278,7 @@ async def hpbd(ctx, user: discord.User=None):
     elif num == 2:
         await ctx.send(f'Happy belated birthday <@{user.id}>, I hope you enjoy today as much as I enjoy diving.')
     elif num == 3:
-        await ctx.send(f'Ehehehe we have a birthday girl/boy here <@{user.id}>! Come come let us celebrated ~~')
+        await ctx.send(f'Ehehehe we have a birthday <@{user.id}> here! Come come let us celebrate ~~')
     await ctx.send(img_url)
 
 @bot.command(name='gn', help="Says good night. bb!gn is da wei.")
