@@ -268,7 +268,7 @@ async def hpbd(ctx, user: discord.User=None):
         return
     else:
         user = [x for x in ctx.guild.members if x.id == user.id][0]
-    MAX = 2
+    MAX = 3
     num = randrange(MAX) + 1
 
     img_path = f'hpbd/{num}.jpg'
@@ -277,6 +277,8 @@ async def hpbd(ctx, user: discord.User=None):
         await ctx.send(f'Happy birthday dear <@{user.id}>, want me to give you a smooch?')
     elif num == 2:
         await ctx.send(f'Happy belated birthday <@{user.id}>, I hope you enjoy today as much as I enjoy diving.')
+    elif num == 3:
+        await ctx.send(f'Ehehehe we have a birthday girl/boy here <@{user.id}>! Come come let us celebrated ~~')
     await ctx.send(img_url)
 
 @bot.command(name='gn', help="Says good night. bb!gn is da wei.")
