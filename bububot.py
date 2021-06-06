@@ -236,18 +236,18 @@ async def ass(ctx):
     if not ctx.channel.is_nsfw():
         await ctx.send("Sorry pal, you can only use this command in a NSFW channel.")
         return
-    MAX = 17
+    MAX = 18
     img_path = f'ass/{randrange(MAX) + 1}.jpg'
     img_url = storage.child(img_path).get_url(None)
     await ctx.send("Ah I see, you are a man of culture as well.")
     await ctx.send(img_url)
 
 @bot.command(name='tits', help="Display a pair of tits. bb!tits and enjoy the lewdness.")
-async def ass(ctx):
+async def tits(ctx):
     if not ctx.channel.is_nsfw():
         await ctx.send("Sorry pal, you can only use this command in a NSFW channel.")
         return
-    MAX = 25
+    MAX = 26
     img_path = f'tits/{randrange(MAX) + 1}.jpg'
     img_url = storage.child(img_path).get_url(None)
     await ctx.send("Remember: In the end, Boobs - are nothing more than fake asses.")
@@ -255,7 +255,7 @@ async def ass(ctx):
 
 @bot.command(name='blush', help="Ya make me blush. bb!blush and enjoy the cuteness.")
 async def blush(ctx):
-    MAX = 13
+    MAX = 15
     img_path = f'blush/{randrange(MAX) + 1}.jpg'
     img_url = storage.child(img_path).get_url(None)
     await ctx.send("B... Baka!")
