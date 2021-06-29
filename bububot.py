@@ -303,20 +303,21 @@ async def blush(ctx, msg_id: int = None, channel: discord.TextChannel=None):
 
     embed.add_field(name="Author", value =  f'<@{msg.author.id}>')
 
-    
-    if len(msg.content) > 1024:
-        quoted_value = f'{msg.content[:1020]}...'
-    if len(msg.content) == 0:
-        quoted_value = "ERROR: This message contains some contents that cannot be displayed here. Please refer to the message link below."
-    else:
-        is_censored = (channel.id != ctx.channel.id) and (channel.is_nsfw() or 'spoiler' in channel.name)
-        if is_censored:
-            print("CAC")
-            quoted_value = f"||{msg.content}||"
+    if len(msg.content) > 0:
+        if len(msg.content) > 1024:
+            quoted_value = f'{msg.content[:1020]}...'
         else:
-            quoted_value = msg.content
-    embed.add_field(name="said: ", value =  quoted_value)
+            is_censored = (channel.id != ctx.channel.id) and (channel.is_nsfw() or 'spoiler' in channel.name)
+            if is_censored:
+                quoted_value = f"||{msg.content}||"
+            else:
+                quoted_value = msg.content
+        embed.insert_field_at(1, name="said: ", value = quoted_value, inline=False)
 
+    if len(msg.attachments) > 0:
+        embed.set_image(url=msg.attachments[0].proxy_url)
+    
+    if len
     embed.set_thumbnail(url=msg.author.avatar_url)
     embed.insert_field_at(2, name="Link", value=f'[Jump to the message]({msg.jump_url})', inline=False)
     embed.set_footer(text=f'Message sent at at {msg.created_at.strftime("%m/%d/%Y, %H:%M:%S")} UTC in #{msg.channel.name}')
