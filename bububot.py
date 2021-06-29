@@ -303,11 +303,11 @@ async def blush(ctx, msg_id: int = None, channel: discord.TextChannel=None):
 
     embed.add_field(name="Author", value =  f'<@{msg.author.id}>')
 
+    is_censored = (channel.id != ctx.channel.id) and (channel.is_nsfw() or 'spoiler' in channel.name)
     if len(msg.content) > 0:
         if len(msg.content) > 1024:
             quoted_value = f'{msg.content[:1020]}...'
         else:
-            is_censored = (channel.id != ctx.channel.id) and (channel.is_nsfw() or 'spoiler' in channel.name)
             if is_censored:
                 quoted_value = f"||{msg.content}||"
             else:
@@ -315,9 +315,17 @@ async def blush(ctx, msg_id: int = None, channel: discord.TextChannel=None):
         embed.insert_field_at(1, name="said: ", value = quoted_value, inline=False)
 
     if len(msg.attachments) > 0:
-        embed.set_image(url=msg.attachments[0].proxy_url)
+        if msg.attachments[0].is_spoiler:
+            embed.insert_field_at(3, name="SPOILER/NSFW", value = "This image is hidden since it contains spoiler or NSFW contents.", inline=False)
+        else:
+            embed.set_image(url=msg.attachments[0].proxy_url)
     
-    if len
+    if len(msg.embeds) > 0:
+        if is_censored:
+            embed.insert_field_at(3, name="SPOILER/NSFW", value = "This image is hidden since it contains spoiler or NSFW contents.", inline=False)
+        else:
+            embed.set_image(url=msg.embeds[0].image.url)
+
     embed.set_thumbnail(url=msg.author.avatar_url)
     embed.insert_field_at(2, name="Link", value=f'[Jump to the message]({msg.jump_url})', inline=False)
     embed.set_footer(text=f'Message sent at at {msg.created_at.strftime("%m/%d/%Y, %H:%M:%S")} UTC in #{msg.channel.name}')
