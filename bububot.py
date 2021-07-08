@@ -431,6 +431,22 @@ async def edit(ctx, category=None):
     else:
         await ctx.send("Sorry my friends, currently the only possible categories for list are `bb!list roleping/rp`, etc.")
 
+@bot.command(name='spoiler', help="Spoiler mark an image. bb!spoiler [message] to send a message, then spoiler mark the old image")
+async def spoilertag(ctx):
+    message = ctx.message
+    await message.delete()
+    if len(message.attachments) == 0:
+        await ctx.send("Sorry, you did not attach an image in order for me to mark it as spoiler.")
+        return
+    if len(message.content) > 11:
+        await ctx.send(ctx.message.content[11:])
+    
+    image = message.attachments[0]
+    # await ctx.send(f'|| {image.proxy_url} ||')
+
+    out_file = await image.to_file(spoiler=True)
+    await ctx.send(file=out_file)
+
 @bot.event
 async def on_guild_join(guild):
     # general = find(lambda x: x.name == 'general',  guild.text_channels)
