@@ -434,10 +434,10 @@ async def edit(ctx, category=None):
 @bot.command(name='spoiler', help="Spoiler mark an image. bb!spoiler [message] to send a message, then spoiler mark the old image")
 async def spoilertag(ctx):
     message = ctx.message
-    await message.delete()
     if len(message.attachments) == 0:
         await ctx.send("Sorry, you did not attach an image in order for me to mark it as spoiler.")
         return
+    await message.delete()
     if len(message.content) > 11:
         await ctx.send(ctx.message.content[11:])
     
