@@ -13,6 +13,8 @@ from datetime import datetime, timedelta
 from discord.utils import get
 from random import randrange
 from discord.utils import find
+import requests
+from bs4 import BeautifulSoup
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_BUBUBOT_TOKEN')
@@ -431,6 +433,28 @@ async def edit(ctx, category=None):
     else:
         await ctx.send("Sorry my friends, currently the only possible categories for list are `bb!list roleping/rp`, etc.")
 
+@bot.command(name='wiki', help="Post the wiki link of a character")
+async def wiki(ctx, manga=None, query=None):
+    if manga is None or (manga != "gb" and manga != "temple"):
+        await ctx.send("Please specify the name of the manga. Either gb or temple.")
+    elif query is None:
+        await ctx.send("Please specify the name of the query. For example: chisa")
+    
+    if manga == "gb":
+        url = "https://grand-blue.fandom.com/wiki/Special:Search?query=" + query
+    elif manga == "temple":
+        url = "https://tenpuru-no-one-can-live-on-loneliness.fandom.com/wiki/Special:Search?query=" + query
+
+    page = requests.get(url)
+
+    soup = BeautifulSoup(page.content, "html.parser")
+    search_elements = soup.find(id="mw-content-text").find_all("li", class_="unified-search__result")
+    if len(search_elements) == 0:
+        await ctx.send("No available results that match your query.")
+    else:
+        await ctx.send(search_elements[0].find("a").get("href"))
+
+
 @bot.command(name='spoiler', help="Spoiler mark an image. bb!spoiler [message] to send a message, then spoiler mark the old image")
 async def spoilertag(ctx):
     message = ctx.message
@@ -442,7 +466,6 @@ async def spoilertag(ctx):
         await ctx.send(ctx.message.content[11:])
     
     image = message.attachments[0]
-    # await ctx.send(f'|| {image.proxy_url} ||')
 
     out_file = await image.to_file(spoiler=True)
     await ctx.send(file=out_file)
