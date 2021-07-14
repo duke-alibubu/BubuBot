@@ -437,8 +437,10 @@ async def edit(ctx, category=None):
 async def wiki(ctx, manga=None, query=None):
     if manga is None or (manga != "gb" and manga != "temple"):
         await ctx.send("Please specify the name of the manga. Either gb or temple.")
+        return
     elif query is None:
         await ctx.send("Please specify the name of the query. For example: chisa")
+        return
     
     if manga == "gb":
         url = "https://grand-blue.fandom.com/wiki/Special:Search?query=" + query
