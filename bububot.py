@@ -109,14 +109,6 @@ def lavenshtein_dist(s1, s2):
     return distances[-1]
 
 
-# @client.event
-# async def on_ready():
-#     guild = discord.utils.get(client.guilds, name=SERVER)
-#     print(
-#         f'{client.user} is connected to the following guild:\n'
-#         f'{guild.name}(id: {guild.id})'
-#     )
-
 @bot.command(name='annoy', help='Me give u free insults! Just type bb!annoy and enjoy the mockery.')
 async def annoy(ctx):
     message = ctx.message
@@ -128,7 +120,7 @@ async def annoy(ctx):
     await member.dm_channel.send(
     f'Hey {member.name}, {random.choice(ANNOY_MSGS)}')
 
-@bot.command(name='opinion', help="The bot's opinion about something. bb!opinion [something] is the format!")
+@bot.command(aliases=['op'], help="Aliases: op. The bot's opinion about something. bb!opinion [something] is the format!")
 async def opinion(ctx):
     message = ctx.message
     interest = message.content[11:]
@@ -167,7 +159,7 @@ async def greet(ctx, user: discord.User=None):
         )
     await ctx.send(response)
 
-@bot.command(name='roleping', help="A person with a given role pings all the people with that role. bb!roleping [role_name] is how you do it!")
+@bot.command(name='roleping', help="Aliases: rp. A person with a given role pings all the people with that role. bb!roleping [role_name] is how you do it!")
 async def roleping(ctx):
     guild = ctx.guild
     if guild is None:
@@ -200,7 +192,7 @@ async def roleping(ctx):
     else:
         await ctx.send(f'Sorry pal, you do not have the role {role} :(')
 
-@bot.command(name='rp', help="A person with a given role pings all the people with that role. bb!roleping [role_name] is how you do it!")
+@bot.command(name='rp', help="Aliases: roleping. A person with a given role pings all the people with that role. bb!roleping [role_name] is how you do it!")
 async def roleping_rp(ctx):
     guild = ctx.guild
     if guild is None:
@@ -233,7 +225,7 @@ async def roleping_rp(ctx):
     else:
         await ctx.send(f'Sorry pal, you do not have the role {role} :(')
 
-@bot.command(name='ass', help="Display an ass. bb!ass and enjoy the lewdness.")
+@bot.command(aliases=['butt'], help="Aliases: butt. Display an ass. bb!ass and enjoy the lewdness.")
 async def ass(ctx):
     if not ctx.channel.is_nsfw():
         await ctx.send("Sorry pal, you can only use this command in a NSFW channel.")
@@ -244,7 +236,7 @@ async def ass(ctx):
     await ctx.send("Ah I see, you are a man of culture as well.")
     await ctx.send(img_url)
 
-@bot.command(name='tits', help="Display a pair of tits. bb!tits and enjoy the lewdness.")
+@bot.command(aliases=['boobs'], help="Aliases: boobs. Display a pair of tits. bb!tits and enjoy the lewdness.")
 async def tits(ctx):
     if not ctx.channel.is_nsfw():
         await ctx.send("Sorry pal, you can only use this command in a NSFW channel.")
@@ -283,15 +275,15 @@ async def hpbd(ctx, user: discord.User=None):
         await ctx.send(f'Ehehehe we have a birthday <@{user.id}> here! Come come let us celebrate ~~')
     await ctx.send(img_url)
 
-@bot.command(name='gn', help="Says good night. bb!gn is da wei.")
-async def gn(ctx):
+@bot.command(aliases=['godnat', 'gudnite', 'gn'], help="Aliases: godnat, gudnite, gn. Says good night. bb!gn is da wei.")
+async def goodnight(ctx):
     img_path = 'gn.jpeg'
     img_url = storage.child(img_path).get_url(None)
     await ctx.send("Good night and have a sweet dream there <3")
     await ctx.send(img_url)
 
-@bot.command(name='quote', help="Quote a sent message. bb!quote [message_id] #[channel_name] is the format. If [channel_name] is not specified, the bot will look up in the current channel by default.")
-async def blush(ctx, msg_id: int = None, channel: discord.TextChannel=None):
+@bot.command(aliases=['q', 'quote'], help="Aliases: q, quote.Quote a sent message. bb!quote [message_id] #[channel_name] is the format. If [channel_name] is not specified, the bot will look up in the current channel by default.")
+async def quotes(ctx, msg_id: int = None, channel: discord.TextChannel=None):
     if msg_id is None:
         await ctx.send("Please specify a message ID")
         return
@@ -403,11 +395,11 @@ async def roleping_list(ctx):
     pingable_roles = db.child("guilds").child(guild.id).child("pingable_roles").get().val()
     await ctx.send(f'The list of pingable roles are:\n{", ".join(pingable_roles.keys())}')
 
-@bot.command(name='edit', help="An user with admin permission edit the configurations of the server. Possible actions are: \nbb!edit reset: Delete all the pingable roles.\nbb!edit roleping/rp add [role_id]: Add a role to the list of pingable roles.\nbb!edit roleping/rp remove/rm [role_id]: Remove a role from the list of pingable roles.\n")
+@bot.command(aliases=['e'], help="Aliases: e. An user with admin permission edit the configurations of the server. Possible actions are: \nbb!edit reset: Delete all the pingable roles.\nbb!edit roleping/rp add [role_id]: Add a role to the list of pingable roles.\nbb!edit roleping/rp remove/rm [role_id]: Remove a role from the list of pingable roles.\n")
 @has_permissions(administrator=True)
 async def edit(ctx, category=None, action=None, param=None):
     if category is None:
-        await ctx.send("Please specify a config category. For example `bb!config reset`, etc.")
+        await ctx.send("Please specify a config category. For example `bb!edit reset`, etc.")
     elif category == 'reset':
         await reset(ctx)
     elif category == "roleping" or category == "rp":
@@ -433,19 +425,21 @@ async def edit(ctx, category=None):
     else:
         await ctx.send("Sorry my friends, currently the only possible categories for list are `bb!list roleping/rp`, etc.")
 
-@bot.command(name='wiki', help="Post the wiki link of a character")
+@bot.command(aliases=['w', 'wk'], help="Aliases: w, wk. Post the wiki link of a character")
 async def wiki(ctx, manga=None, query=None):
-    if manga is None or (manga != "gb" and manga != "temple"):
-        await ctx.send("Please specify the name of the manga. Either gb or temple.")
+    if manga is None:
+        await ctx.send("Please specify the name of the manga. Either gb/grandblue or tp/temple/tenpuru.")
         return
     elif query is None:
         await ctx.send("Please specify the name of the query. For example: chisa")
         return
-    
-    if manga == "gb":
+    elif manga == "gb" or manga == "grandblue":
         url = "https://grand-blue.fandom.com/wiki/Special:Search?query=" + query
-    elif manga == "temple":
+    elif manga == "temple" or manga == "tenpuru" or manga == "tp":
         url = "https://tenpuru-no-one-can-live-on-loneliness.fandom.com/wiki/Special:Search?query=" + query
+    else:
+        await ctx.send("Please specify a valid name for the manga. Either gb/grandblue or tp/temple/tenpuru.")
+        return
 
     page = requests.get(url)
 
@@ -457,8 +451,8 @@ async def wiki(ctx, manga=None, query=None):
         await ctx.send(search_elements[0].find("a").get("href"))
 
 
-@bot.command(name='spoiler', help="Spoiler mark an image. bb!spoiler [message] to send a message, then spoiler mark the old image")
-async def spoilertag(ctx):
+@bot.command(aliases=['sp'], help="Aliases: sp. Spoiler mark an image. bb!spoiler [message] to send a message, then spoiler mark the old image")
+async def spoiler(ctx):
     message = ctx.message
     if len(message.attachments) == 0:
         await ctx.send("Sorry, you did not attach an image in order for me to mark it as spoiler.")
