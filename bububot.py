@@ -17,7 +17,7 @@ import requests
 from bs4 import BeautifulSoup
 
 load_dotenv()
-TOKEN = os.getenv('DISCORD_BUBUBOT_TOKEN')
+TOKEN = os.getenv('DISCORD_BUBUTEST_TOKEN')
 SERVER = os.getenv('SERVER_NAME')
 AUTHOR_ID = os.getenv('BUBU_DISCORD_ID')
 
@@ -64,7 +64,7 @@ OPINION_MSGS = [
 ]
 intents = discord.Intents.default()
 intents.members = True
-bot = commands.Bot(command_prefix=['bb!', 'Bb!', 'BB!', 'bB!', 'pab!', 'Pab!', 'PAB!'], intents=intents)
+bot = commands.Bot(command_prefix=['xx!', 'Bb!', 'BB!', 'bB!', 'pab!', 'Pab!', 'PAB!'], intents=intents)
 
 def calculate_best_opinion(obj):
     scores = []
@@ -120,7 +120,7 @@ async def annoy(ctx):
     await member.dm_channel.send(
     f'Hey {member.name}, {random.choice(ANNOY_MSGS)}')
 
-@bot.command(aliases=['op'], help="Aliases: op. The bot's opinion about something. bb!opinion [something] is the format!")
+@bot.command(help="Aliases: op. The bot's opinion about something. bb!opinion [something] is the format!")
 async def opinion(ctx):
     message = ctx.message
     interest = message.content[11:]
@@ -346,7 +346,7 @@ async def about(ctx):
 async def reset(ctx):
     guild = ctx.guild
     db.child("guilds").child(guild.id).remove()
-    db.child("guilds").child(guild.id).set({"name": guild.name})
+    guild_setup(guild)
     await ctx.send("Successfully reset all data of this server. The list of pingable roles are empty now.")
 
 async def roleping_add(ctx, role_id):
@@ -428,27 +428,32 @@ async def edit(ctx, category=None):
 @bot.command(aliases=['w', 'wk'], help="Aliases: w, wk. Post the wiki link of a character")
 async def wiki(ctx, manga=None, query=None):
     if manga is None:
-        await ctx.send("Please specify the name of the manga. Either gb/grandblue or tp/temple/tenpuru.")
+        await ctx.send("Please specify the name of the manga.")
         return
     elif query is None:
         await ctx.send("Please specify the name of the query. For example: chisa")
         return
-    elif manga == "gb" or manga == "grandblue":
-        url = "https://grand-blue.fandom.com/wiki/Special:Search?query=" + query
-    elif manga == "temple" or manga == "tenpuru" or manga == "tp":
-        url = "https://tenpuru-no-one-can-live-on-loneliness.fandom.com/wiki/Special:Search?query=" + query
+    # elif manga == "gb" or manga == "grandblue":
+    #     url = "https://grand-blue.fandom.com/wiki/Special:Search?query=" + query
+    # elif manga == "temple" or manga == "tenpuru" or manga == "tp":
+    #     url = "https://tenpuru-no-one-can-live-on-loneliness.fandom.com/wiki/Special:Search?query=" + query
     else:
-        await ctx.send("Please specify a valid name for the manga. Either gb/grandblue or tp/temple/tenpuru.")
+        guild = ctx.guild
+        links = db.child("guilds").child(guild.id).child("wiki").get().val()
+        if not manga in links:
+            await ctx.send("Please specify a valid name for the manga.")
+            return
+        base_url = links[manga] + "/Special:Search?query=" + query
+        print(base_url)
+
+        page = requests.get(base_url)
+        soup = BeautifulSoup(page.content, "html.parser")
+        search_elements = soup.find(id="mw-content-text").find_all("li", class_="unified-search__result")
+        if len(search_elements) == 0:
+            await ctx.send("No available results that match your query.")
+        else:
+            await ctx.send(search_elements[0].find("a").get("href"))
         return
-
-    page = requests.get(url)
-
-    soup = BeautifulSoup(page.content, "html.parser")
-    search_elements = soup.find(id="mw-content-text").find_all("li", class_="unified-search__result")
-    if len(search_elements) == 0:
-        await ctx.send("No available results that match your query.")
-    else:
-        await ctx.send(search_elements[0].find("a").get("href"))
 
 
 @bot.command(aliases=['sp'], help="Aliases: sp. Spoiler mark an image. bb!spoiler [message] to send a message, then spoiler mark the old image")
@@ -473,8 +478,17 @@ async def on_guild_join(guild):
     #     await general.send('Hello {}!'.format(guild.name))
     # print(guild.id)
     # db.child("guilds").child(guild.id)
-    db.child("guilds").child(guild.id).set({"name": guild.name})
+    guild_setup(guild)
 
+def guild_setup(guild):
+    guild_obj = db.child("guilds").child(guild.id)
+    guild_obj.set({"name": guild.name})
+
+    #setup wiki
+    db.child("guilds").child(guild.id).child("wiki").update({"gb": "https://grand-blue.fandom.com/wiki"})
+    db.child("guilds").child(guild.id).child("wiki").update({"grandblue": "https://grand-blue.fandom.com/wiki"})
+    db.child("guilds").child(guild.id).child("wiki").update({"temple": "https://tenpuru-no-one-can-live-on-loneliness.fandom.com/wiki"})
+    db.child("guilds").child(guild.id).child("wiki").update({"tenpuru": "https://tenpuru-no-one-can-live-on-loneliness.fandom.com/wiki"})
 @bot.event
 async def on_command_error(ctx, error):
     print(type(error))
