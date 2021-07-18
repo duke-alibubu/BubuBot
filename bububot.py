@@ -413,11 +413,20 @@ async def edit(ctx, category=None, action=None, param=None):
             await roleping_list(ctx)
         else:
             await ctx.send("Sorry my friends, currently the only possible actions for `config roleping` are `add`, `remove/rm` or `list`.")
+    elif category == "wiki":
+        if action is None:
+            await ctx.send("Please specify the name of the wiki command. For example, gb for Grand Blue, etc.")
+        elif param is None:
+            await ctx.send("Please specify the base wiki link. For example https://grand-blue.fandom.com/wiki")
+        else:
+            guild = ctx.guild
+            db.child("guilds").child(guild.id).child("wiki").update({action: param})
+            await ctx.send(f'Successfully add the link {param} for the wiki command `bb!wiki {action}`')
     else:
         await ctx.send("Sorry my friends, currently the only possible categories for config are `roleping/rp` or `reset`.")
 
 @bot.command(name='list', help="List the list of rolepings, or something else.\nbb!list rp/roleping is to list all the pingable roles!")
-async def edit(ctx, category=None):
+async def list(ctx, category=None):
     if category is None:
         await ctx.send("Please specify a category to list. For example `bb!list roleping/rp`, etc.")
     elif category == "roleping" or category == "rp":
@@ -433,10 +442,6 @@ async def wiki(ctx, manga=None, query=None):
     elif query is None:
         await ctx.send("Please specify the name of the query. For example: chisa")
         return
-    # elif manga == "gb" or manga == "grandblue":
-    #     url = "https://grand-blue.fandom.com/wiki/Special:Search?query=" + query
-    # elif manga == "temple" or manga == "tenpuru" or manga == "tp":
-    #     url = "https://tenpuru-no-one-can-live-on-loneliness.fandom.com/wiki/Special:Search?query=" + query
     else:
         guild = ctx.guild
         links = db.child("guilds").child(guild.id).child("wiki").get().val()
