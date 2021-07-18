@@ -17,7 +17,7 @@ import requests
 from bs4 import BeautifulSoup
 
 load_dotenv()
-TOKEN = os.getenv('DISCORD_BUBUTEST_TOKEN')
+TOKEN = os.getenv('DISCORD_BUBUBOT_TOKEN')
 SERVER = os.getenv('SERVER_NAME')
 AUTHOR_ID = os.getenv('BUBU_DISCORD_ID')
 
@@ -64,7 +64,7 @@ OPINION_MSGS = [
 ]
 intents = discord.Intents.default()
 intents.members = True
-bot = commands.Bot(command_prefix=['xx!', 'Bb!', 'BB!', 'bB!', 'pab!', 'Pab!', 'PAB!'], intents=intents)
+bot = commands.Bot(command_prefix=['bb!', 'Bb!', 'BB!', 'bB!', 'pab!', 'Pab!', 'PAB!'], intents=intents)
 
 def calculate_best_opinion(obj):
     scores = []
