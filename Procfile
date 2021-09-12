@@ -1,1 +1,1 @@
-﻿worker: python ./bububot.py
+﻿worker: python ./src/bububot.py
