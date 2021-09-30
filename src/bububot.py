@@ -16,8 +16,10 @@ from discord.utils import find
 import requests
 from bs4 import BeautifulSoup
 
+from music_youtube import music_youtube_cog
+
 load_dotenv()
-TOKEN = os.getenv('DISCORD_BUBUBOT_TOKEN')
+TOKEN = os.getenv('DISCORD_BUBUTEST_TOKEN')
 SERVER = os.getenv('SERVER_NAME')
 AUTHOR_ID = os.getenv('BUBU_DISCORD_ID')
 
@@ -64,7 +66,7 @@ OPINION_MSGS = [
 ]
 intents = discord.Intents.default()
 intents.members = True
-bot = commands.Bot(command_prefix=['bb!', 'Bb!', 'BB!', 'bB!', 'pab!', 'Pab!', 'PAB!'], intents=intents)
+bot = commands.Bot(command_prefix=['bt!', 'Bb!', 'BB!', 'bB!', 'pab!', 'Pab!', 'PAB!'], intents=intents)
 
 def calculate_best_opinion(obj):
     scores = []
@@ -230,7 +232,7 @@ async def ass(ctx):
     if not ctx.channel.is_nsfw():
         await ctx.send("Sorry pal, you can only use this command in a NSFW channel.")
         return
-    MAX = 18
+    MAX = 19
     img_path = f'ass/{randrange(MAX) + 1}.jpg'
     img_url = storage.child(img_path).get_url(None)
     await ctx.send("Ah I see, you are a man of culture as well.")
@@ -508,4 +510,6 @@ async def on_command_error(ctx, error):
             await ctx.send('No message with such ID exists. Please check it again my friend :<')
     elif isinstance(error, commands.errors.CommandNotFound):
         await ctx.send('My apologies, you specified the wrong command! Type `bb!help` for the list of possible commands.')
+
+bot.add_cog(music_youtube_cog(bot))
 bot.run(TOKEN)
