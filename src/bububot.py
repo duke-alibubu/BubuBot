@@ -513,4 +513,6 @@ async def on_command_error(ctx, error):
         await ctx.send('My apologies, you specified the wrong command! Type `bb!help` for the list of possible commands.')
 
 bot.add_cog(music_youtube_cog(bot))
+
+discord.opus.load_opus()
 bot.run(TOKEN)
