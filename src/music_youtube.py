@@ -1,6 +1,4 @@
 import discord
-import calendar
-import time
 from discord.ext import commands
 
 from youtube_dl import YoutubeDL
