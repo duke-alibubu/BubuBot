@@ -15,6 +15,8 @@ from random import randrange
 from discord.utils import find
 import requests
 from bs4 import BeautifulSoup
+import ctypes
+import ctypes.util
 
 from music_youtube import music_youtube_cog
 
@@ -514,5 +516,5 @@ async def on_command_error(ctx, error):
 
 bot.add_cog(music_youtube_cog(bot))
 
-discord.opus.load_opus()
+discord.opus.load_opus(ctypes.util.find_library('opus'))
 bot.run(TOKEN)
