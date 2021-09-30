@@ -113,7 +113,7 @@ class music_youtube_cog(commands.Cog):
     async def q(self, ctx):
         retval = ""
         for i in range(0, len(self.music_queue)):
-            retval += "{index}".format(index = i+1) + self.music_queue[i]['title'] + "\n"
+            retval += "{index} ".format(index = i+1) + self.music_queue[i]['title'] + "\n"
 
         print(retval)
         if retval != "":

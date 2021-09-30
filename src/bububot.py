@@ -499,6 +499,7 @@ def guild_setup(guild):
 @bot.event
 async def on_command_error(ctx, error):
     print(type(error))
+    print(error)
     if isinstance(error, commands.errors.CheckFailure):
         await ctx.send('Sorry my friends, you do not have the necessary permission to make me do this.')
     elif isinstance(error, commands.errors.ChannelNotFound):
