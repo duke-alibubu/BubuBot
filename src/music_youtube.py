@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+import json
 
 from youtube_dl import YoutubeDL
 
@@ -13,7 +14,7 @@ class music_youtube_cog(commands.Cog):
 
         # array containing song
         self.music_queue = []
-        self.YDL_OPTIONS = {'format': 'bestaudio',  'noplaylist':'True'}
+        self.YDL_OPTIONS = {'format': 'bestaudio'}
         self.FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
 
         self.vc = ""
@@ -26,7 +27,16 @@ class music_youtube_cog(commands.Cog):
                     info = ydl.extract_info(url=item, download=False)
                 except Exception: 
                     return False
-            return {'source': info['formats'][0]['url'], 'title': info['title']}
+            
+            if "entries" in info:   # check if it's a YouTube list 
+                print("CAC")
+                songs = []
+                for entry in info['entries']:
+                    print(entry)
+                    songs.append({'source': entry['formats'][0]['url'], 'title': entry['title']})
+                return songs
+            else:
+                return [{'source': info['formats'][0]['url'], 'title': info['title']}]
 
         with YoutubeDL(self.YDL_OPTIONS) as ydl:
             try: 
@@ -34,7 +44,7 @@ class music_youtube_cog(commands.Cog):
             except Exception: 
                 return False
 
-        return {'source': info['formats'][0]['url'], 'title': info['title']}
+        return [{'source': info['formats'][0]['url'], 'title': info['title']}]
 
     def play_next(self):
         if len(self.music_queue) > 0:
@@ -100,11 +110,12 @@ class music_youtube_cog(commands.Cog):
             #you need to be connected so that the bot knows where to go
             await ctx.send("Connect to a voice channel!")
         else:
-            song = self.search_yt(query)
-            if type(song) == type(True):
+            songs = self.search_yt(query)
+            if type(songs[0]) == type(True):
                 await ctx.send("Could not download the song. Incorrect format try another keyword. This could be due to playlist or a livestream format.")
             else:
-                self.music_queue.append(song)
+                for song in songs:
+                    self.music_queue.append(song)
                 
                 if self.is_playing == False:
                     await self.play_music()
