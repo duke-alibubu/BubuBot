@@ -286,6 +286,12 @@ async def goodnight(ctx):
     await ctx.send("Good night and have a sweet dream there <3")
     await ctx.send(img_url)
 
+@bot.command(aliases=['hb'], help="Aliases: hb. Don't use this.")
+async def hotboy(ctx):
+    img_path = 'hot.jpeg'
+    img_url = storage.child(img_path).get_url(None)
+    await ctx.send(img_url)
+
 @bot.command(aliases=['q', 'quote'], help="Aliases: q, quote.Quote a sent message. bb!quote [message_id] #[channel_name] is the format. If [channel_name] is not specified, the bot will look up in the current channel by default.")
 async def quotes(ctx, msg_id: int = None, channel: discord.TextChannel=None):
     if msg_id is None:
