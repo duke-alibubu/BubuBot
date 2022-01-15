@@ -243,7 +243,7 @@ async def ass(ctx):
 @bot.command(help="Lada can be more ... heartful.")
 async def heartless(ctx):
     MAX = 2
-    img_path = f'ass/{randrange(MAX) + 1}.jpeg'
+    img_path = f'heartless/{randrange(MAX) + 1}.jpeg'
     img_url = storage.child(img_path).get_url(None)
     await ctx.send(img_url)
 
