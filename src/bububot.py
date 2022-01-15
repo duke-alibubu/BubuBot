@@ -240,6 +240,13 @@ async def ass(ctx):
     await ctx.send("Ah I see, you are a man of culture as well.")
     await ctx.send(img_url)
 
+@bot.command(aliases=['heartless'], help="Lada can be more ... heartful.")
+async def heartless(ctx):
+    MAX = 2
+    img_path = f'ass/{randrange(MAX) + 1}.jpeg'
+    img_url = storage.child(img_path).get_url(None)
+    await ctx.send(img_url)
+
 @bot.command(aliases=['boobs'], help="Aliases: boobs. Display a pair of tits. bb!tits and enjoy the lewdness.")
 async def tits(ctx):
     if not ctx.channel.is_nsfw():
