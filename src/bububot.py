@@ -240,7 +240,7 @@ async def ass(ctx):
     await ctx.send("Ah I see, you are a man of culture as well.")
     await ctx.send(img_url)
 
-@bot.command(aliases=['heartless'], help="Lada can be more ... heartful.")
+@bot.command(help="Lada can be more ... heartful.")
 async def heartless(ctx):
     MAX = 2
     img_path = f'ass/{randrange(MAX) + 1}.jpeg'
