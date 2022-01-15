@@ -245,6 +245,7 @@ async def heartless(ctx):
     MAX = 2
     img_path = f'heartless/{randrange(MAX) + 1}.jpeg'
     img_url = storage.child(img_path).get_url(None)
+    await ctx.send("You know what's the coldest place in the world? Not Arctic, not Antarctic. \nIt's the heart of Lada.")
     await ctx.send(img_url)
 
 @bot.command(aliases=['boobs'], help="Aliases: boobs. Display a pair of tits. bb!tits and enjoy the lewdness.")
@@ -295,8 +296,10 @@ async def goodnight(ctx):
 
 @bot.command(aliases=['hb'], help="Aliases: hb. Don't use this.")
 async def hotboy(ctx):
-    img_path = 'hot.jpeg'
+    MAX = 2
+    img_path = f'hotboy/{randrange(MAX) + 1}.jpeg'
     img_url = storage.child(img_path).get_url(None)
+    await ctx.send("Here is the pride of Nghe An, an absolute chad. \nAnd a very good boy.")
     await ctx.send(img_url)
 
 @bot.command(aliases=['q', 'quote'], help="Aliases: q, quote.Quote a sent message. bb!quote [message_id] #[channel_name] is the format. If [channel_name] is not specified, the bot will look up in the current channel by default.")
