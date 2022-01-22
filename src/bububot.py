@@ -242,7 +242,7 @@ async def ass(ctx):
 
 @bot.command(help="Lada can be more ... heartful.")
 async def heartless(ctx):
-    MAX = 2
+    MAX = 3
     img_path = f'heartless/{randrange(MAX) + 1}.jpeg'
     img_url = storage.child(img_path).get_url(None)
     await ctx.send("You know what's the coldest place in the world? Not Arctic, not Antarctic. \nIt's the heart of Lada.")
@@ -296,7 +296,7 @@ async def goodnight(ctx):
 
 @bot.command(aliases=['hb'], help="Aliases: hb. Don't use this.")
 async def hotboy(ctx):
-    MAX = 2
+    MAX = 5
     img_path = f'hotboy/{randrange(MAX) + 1}.jpeg'
     img_url = storage.child(img_path).get_url(None)
     await ctx.send("Here is the pride of Nghe An, an absolute chad. \nAnd a very good boy.")
