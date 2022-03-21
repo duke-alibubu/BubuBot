@@ -1,1 +1,1 @@
-# BubuBot by Alibubu
+## BubuBot by Alibubu
