@@ -113,17 +113,6 @@ def lavenshtein_dist(s1, s2):
     return distances[-1]
 
 
-@bot.command(name='annoy', help='Me give u free insults! Just type bb!annoy and enjoy the mockery.')
-async def annoy(ctx):
-    message = ctx.message
-    response = "Let me annoy you real quick..."
-    await ctx.send(response)
-    
-    member = message.author
-    await member.create_dm()
-    await member.dm_channel.send(
-    f'Hey {member.name}, {random.choice(ANNOY_MSGS)}')
-
 @bot.command(help="Aliases: op. The bot's opinion about something. bb!opinion [something] is the format!")
 async def opinion(ctx):
     message = ctx.message
@@ -229,42 +218,12 @@ async def roleping_rp(ctx):
     else:
         await ctx.send(f'Sorry pal, you do not have the role {role} :(')
 
-@bot.command(aliases=['butt'], help="Aliases: butt. Display an ass. bb!ass and enjoy the lewdness.")
-async def ass(ctx):
-    if not ctx.channel.is_nsfw():
-        await ctx.send("Sorry pal, you can only use this command in a NSFW channel.")
-        return
-    MAX = 19
-    img_path = f'ass/{randrange(MAX) + 1}.jpg'
-    img_url = storage.child(img_path).get_url(None)
-    await ctx.send("Ah I see, you are a man of culture as well.")
-    await ctx.send(img_url)
-
 @bot.command(help="Lada can be more ... heartful.")
 async def heartless(ctx):
     MAX = 3
     img_path = f'heartless/{randrange(MAX) + 1}.jpeg'
     img_url = storage.child(img_path).get_url(None)
     await ctx.send("You know what's the coldest place in the world? Not Arctic, not Antarctic. \nIt's the heart of Lada.")
-    await ctx.send(img_url)
-
-@bot.command(aliases=['boobs'], help="Aliases: boobs. Display a pair of tits. bb!tits and enjoy the lewdness.")
-async def tits(ctx):
-    if not ctx.channel.is_nsfw():
-        await ctx.send("Sorry pal, you can only use this command in a NSFW channel.")
-        return
-    MAX = 27
-    img_path = f'tits/{randrange(MAX) + 1}.jpg'
-    img_url = storage.child(img_path).get_url(None)
-    await ctx.send("Remember: In the end, Boobs - are nothing more than fake asses.")
-    await ctx.send(img_url)
-
-@bot.command(name='blush', help="Ya make me blush. bb!blush and enjoy the cuteness.")
-async def blush(ctx):
-    MAX = 15
-    img_path = f'blush/{randrange(MAX) + 1}.jpg'
-    img_url = storage.child(img_path).get_url(None)
-    await ctx.send("B... Baka!")
     await ctx.send(img_url)
 
 @bot.command(name='hpbd', help="Happy birthday to an user. bb!hpbd to congratulate them.")
